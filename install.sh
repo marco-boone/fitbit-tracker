@@ -21,6 +21,7 @@ need_cmd() {
 }
 
 bold "fitbit-tracker install"
+dim "Repo: ${REPO_ROOT}"
 echo
 
 need_cmd python3
