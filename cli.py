@@ -12,6 +12,7 @@ from typing import Any
 
 from auth import AuthError, clear_tokens, get_client, login_interactive
 from health_client import fetch_all_stats
+from setup import check_ready, run_setup
 
 STEP_GOAL = 10_000
 LABEL_WIDTH = 22
@@ -167,6 +168,10 @@ def format_report(data: dict[str, Any]) -> str:
 
 
 def cmd_stats() -> int:
+    hint = check_ready()
+    if hint:
+        print(f"{T.error}error:{T.reset} {hint}", file=sys.stderr)
+        return 1
     client = get_client()
     data = fetch_all_stats(client)
     print(format_report(data))
@@ -184,6 +189,10 @@ def cmd_logout() -> int:
     return 0
 
 
+def cmd_setup() -> int:
+    return run_setup()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="fitbit",
@@ -193,8 +202,8 @@ def main() -> int:
         "command",
         nargs="?",
         default="stats",
-        choices=("stats", "login", "logout"),
-        help="stats (default): print dashboard; login: authorize; logout: clear tokens",
+        choices=("stats", "login", "logout", "setup"),
+        help="stats (default): print dashboard; setup: install wizard; login; logout",
     )
     args = parser.parse_args()
 
@@ -203,6 +212,8 @@ def main() -> int:
             return cmd_stats()
         if args.command == "login":
             return cmd_login()
+        if args.command == "setup":
+            return cmd_setup()
         return cmd_logout()
     except AuthError as exc:
         print(f"{T.error}error:{T.reset} {exc}", file=sys.stderr)
