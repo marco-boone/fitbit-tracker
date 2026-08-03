@@ -2,7 +2,7 @@
 
 Terminal Fitbit stats.
 
-**Linux and MacOS.**
+**Linux and macOS.**
 
 ## Requirements
 
@@ -54,6 +54,8 @@ The script will:
 - prompt for Google OAuth credentials
 - install `fitbit` to `~/.local/bin`
 - offer to sign you in via browser
+
+> **Note:** `~/.local/bin` isn't on PATH everywhere by default (especially macOS). If `fitbit` isn't found after install, add that directory to your PATH.
 
 ## Commands
 
